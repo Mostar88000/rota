@@ -1,0 +1,668 @@
+import { useEffect, useRef, useState } from 'react'
+
+const languages = [
+  { code: 'bs', label: 'Bosanski', short: 'BS' },
+  { code: 'de', label: 'Deutsch', short: 'DE' },
+  { code: 'en', label: 'English', short: 'EN' },
+]
+
+const content = {
+  de: {
+    ui: {
+      menu: 'Menü',
+      close: 'Schließen',
+      language: 'Sprache wählen',
+      maps: 'Google Maps öffnen',
+      eyebrow: 'Mostar / ROTA 1996',
+      prices: 'Preise',
+      menuTitle: 'Speisekarte',
+      location: 'Standort',
+      locations: 'Standorte',
+    },
+    nav: ['Home', 'Preise', 'Standort'],
+    story: [
+      {
+        label: 'Ursprung',
+        title: 'Mitten in Mostar',
+        text: 'Mitten im Herzen von Mostar begann ROTA mit einer einfachen Idee: ehrliches Essen, echte Tradition und ein Ort, an dem Menschen zusammenkommen. Was mit Leidenschaft für bosnische Küche begann, wurde schnell zu einem festen Treffpunkt für Einheimische und Reisende aus aller Welt.',
+      },
+      {
+        label: 'Handwerk',
+        title: 'Tradition am Grill',
+        text: 'Jeder Ćevap, jedes frisch gebackene Somun und jede Spezialität erzählt ein Stück unserer Geschichte - gemacht nach traditionellen Rezepten, mit Liebe und besten Zutaten. Der Duft vom Grill, das Lächeln unserer Gäste und die Wärme unserer Atmosphäre machen ROTA zu mehr als nur einem Restaurant.',
+      },
+      {
+        label: 'Heute',
+        title: 'Willkommen bei ROTA',
+        text: 'Heute ist ROTA an zwei Standorten in Mostar zuhause - aber unser Herz bleibt dasselbe: Tradition bewahren, Geschmack teilen und jeden Gast wie Familie empfangen. Willkommen bei ROTA.',
+      },
+    ],
+    priceSections: [
+      {
+        title: 'Fleisch',
+        items: [
+          { name: 'Mostarski Ćevap ROTA', prices: ['15 Stk. 20,50 KM', '10 Stk. 14,00 KM', '7 Stk. 10,00 KM', '5 Stk. 7,50 KM'] },
+          { name: 'Pljeskavica', prices: ['Groß 14,00 KM', 'Klein 7,50 KM', 'Scharf 14,00 KM'] },
+          { name: 'Gourmet-Pljeskavica', prices: ['Groß 16,00 KM', 'Klein 11,00 KM'] },
+          { name: 'Hausgemachte Sudžukice', prices: ['Groß 15,00 KM', 'Klein 8,50 KM'] },
+          { name: 'Šiš Ćevap', prices: ['Groß 15,00 KM', 'Klein 8,50 KM'] },
+          { name: 'Gefüllter Šiš Ćevap', prices: ['Groß 18,00 KM'] },
+        ],
+      },
+      {
+        title: 'Kalbfleisch',
+        items: [
+          { name: 'Kalbsspieße', prices: ['Groß 17,00 KM', 'Klein 10,00 KM'] },
+          { name: 'Kalbsschnitzel', prices: ['Groß 17,00 KM'] },
+          { name: 'Kalbsgeschnetzeltes', prices: ['Groß 17,00 KM', 'Klein 10,00 KM'] },
+          { name: 'Kalbsnieren', prices: ['Groß 15,00 KM', 'Klein 9,00 KM'] },
+          { name: 'Kalbsbries', prices: ['Groß 18,00 KM'] },
+          { name: 'Kalbsleber', prices: ['Groß 16,00 KM', 'Klein 9,00 KM'] },
+        ],
+      },
+      {
+        title: 'Hähnchen',
+        items: [
+          { name: 'Hähnchenfilets', prices: ['Groß 14,00 KM', 'Klein 8,50 KM'] },
+          { name: 'Hähnchenspieße', prices: ['Groß 14,00 KM', 'Klein 8,50 KM'] },
+          { name: 'Hähnchenschenkel', prices: ['Groß 12,00 KM'] },
+          { name: 'Hähnchensalat', prices: ['Groß 12,50 KM'] },
+        ],
+      },
+      {
+        title: 'Kombinationen',
+        items: [
+          { name: 'Fünf Ćevapi + kleine Pljeskavica', prices: ['15,00 KM'] },
+          { name: 'Fünf Ćevapi + kleine Sudžukice', prices: ['15,50 KM'] },
+          { name: 'Fünf Ćevapi + kleine Kalbsstreifen', prices: ['16,50 KM'] },
+          { name: 'Fünf Ćevapi + kleine Filets', prices: ['16,00 KM'] },
+        ],
+      },
+      {
+        title: 'Beilagen',
+        items: [
+          { name: 'Kajmak', prices: ['4,00 KM'] },
+          { name: 'Kajmak kleine Portion', prices: ['2,00 KM'] },
+          { name: 'Somun', prices: ['1,00 KM'] },
+          { name: 'Saisonsalat', prices: ['5,00 KM'] },
+          { name: 'Sauermilch', prices: ['3,00 KM'] },
+        ],
+      },
+      {
+        title: 'Getränke',
+        items: [
+          { name: 'Coca-Cola', prices: ['4,00 KM'] },
+          { name: 'Fanta Orange', prices: ['4,00 KM'] },
+          { name: 'Fanta Lemon', prices: ['4,00 KM'] },
+          { name: 'Sprite', prices: ['4,00 KM'] },
+          { name: 'Schweppes Bitter Lemon', prices: ['4,00 KM'] },
+          { name: 'Schweppes Tonic Water', prices: ['4,00 KM'] },
+          { name: 'Cockta', prices: ['4,00 KM'] },
+          { name: 'Mineralwasser', prices: ['3,00 KM'] },
+          { name: 'Sensation', prices: ['3,50 KM'] },
+        ],
+      },
+      {
+        title: 'Natürliche Säfte',
+        items: [
+          { name: 'Pfirsich', prices: ['4,00 KM'] },
+          { name: 'Apfel', prices: ['4,00 KM'] },
+          { name: 'Erdbeere', prices: ['4,00 KM'] },
+          { name: 'Heidelbeere', prices: ['4,00 KM'] },
+          { name: 'Orangensaft', prices: ['4,00 KM'] },
+          { name: 'Orangina', prices: ['4,50 KM'] },
+          { name: 'Eistee', prices: ['4,00 KM'] },
+          { name: 'Stilles Wasser', prices: ['3,00 KM'] },
+          { name: 'Alkoholfreies Bier', prices: ['4,00 KM'] },
+        ],
+      },
+    ],
+  },
+  bs: {
+    ui: {
+      menu: 'Meni',
+      close: 'Zatvori',
+      language: 'Odaberi jezik',
+      maps: 'Otvori Google Maps',
+      eyebrow: 'Mostar / ROTA 1996',
+      prices: 'Cijene',
+      menuTitle: 'Jelovnik',
+      location: 'Lokacija',
+      locations: 'Lokacije',
+    },
+    nav: ['Početna', 'Cijene', 'Lokacija'],
+    story: [
+      {
+        label: 'Početak',
+        title: 'U srcu Mostara',
+        text: 'U srcu Mostara ROTA je počela s jednostavnom idejom: iskrena hrana, prava tradicija i mjesto gdje se ljudi okupljaju. Ono što je počelo iz ljubavi prema bosanskoj kuhinji brzo je postalo prepoznatljivo mjesto za domaće goste i putnike iz cijelog svijeta.',
+      },
+      {
+        label: 'Zanat',
+        title: 'Tradicija s roštilja',
+        text: 'Svaki ćevap, svaki svježe pečeni somun i svaki specijalitet priča dio naše priče - pripremljen po tradicionalnim receptima, s ljubavlju i najboljim sastojcima. Miris roštilja, osmijeh naših gostiju i toplina atmosfere čine ROTU više od restorana.',
+      },
+      {
+        label: 'Danas',
+        title: 'Dobro došli u ROTU',
+        text: 'Danas je ROTA kod kuće na dvije lokacije u Mostaru - ali naše srce ostaje isto: čuvati tradiciju, dijeliti ukus i svakog gosta dočekati kao porodicu. Dobro došli u ROTU.',
+      },
+    ],
+    priceSections: [
+      {
+        title: 'Meso',
+        items: [
+          { name: 'Mostarski ćevap ROTA', prices: ['15 kom. 20,50 KM', '10 kom. 14,00 KM', '7 kom. 10,00 KM', '5 kom. 7,50 KM'] },
+          { name: 'Pljeskavica', prices: ['Velika 14,00 KM', 'Mala 7,50 KM', 'Ljuta 14,00 KM'] },
+          { name: 'Gurmanska pljeskavica', prices: ['Velika 16,00 KM', 'Mala 11,00 KM'] },
+          { name: 'Domaće sudžukice', prices: ['Velika 15,00 KM', 'Mala 8,50 KM'] },
+          { name: 'Šiš ćevap', prices: ['Velika 15,00 KM', 'Mala 8,50 KM'] },
+          { name: 'Punjeni šiš ćevap', prices: ['Velika 18,00 KM'] },
+        ],
+      },
+      {
+        title: 'Teleće meso',
+        items: [
+          { name: 'Teleći ražnjići', prices: ['Velika 17,00 KM', 'Mala 10,00 KM'] },
+          { name: 'Teleća šnicla', prices: ['Velika 17,00 KM'] },
+          { name: 'Teleće krpice', prices: ['Velika 17,00 KM', 'Mala 10,00 KM'] },
+          { name: 'Teleći bubrezi', prices: ['Velika 15,00 KM', 'Mala 9,00 KM'] },
+          { name: 'Teleća brizla', prices: ['Velika 18,00 KM'] },
+          { name: 'Teleća džigarica', prices: ['Velika 16,00 KM', 'Mala 9,00 KM'] },
+        ],
+      },
+      {
+        title: 'Piletina',
+        items: [
+          { name: 'Pileći fileti', prices: ['Velika 14,00 KM', 'Mala 8,50 KM'] },
+          { name: 'Pileći ražnjići', prices: ['Velika 14,00 KM', 'Mala 8,50 KM'] },
+          { name: 'Pileći batak', prices: ['Velika 12,00 KM'] },
+          { name: 'Pileća salata', prices: ['Velika 12,50 KM'] },
+        ],
+      },
+      {
+        title: 'Kombinacije',
+        items: [
+          { name: 'Pet ćevapa + mala pljeskavica', prices: ['15,00 KM'] },
+          { name: 'Pet ćevapa + male sudžukice', prices: ['15,50 KM'] },
+          { name: 'Pet ćevapa + male krpice', prices: ['16,50 KM'] },
+          { name: 'Pet ćevapa + mali fileti', prices: ['16,00 KM'] },
+        ],
+      },
+      {
+        title: 'Prilozi',
+        items: [
+          { name: 'Kajmak', prices: ['4,00 KM'] },
+          { name: 'Kajmak mala porcija', prices: ['2,00 KM'] },
+          { name: 'Somun', prices: ['1,00 KM'] },
+          { name: 'Sezonska salata', prices: ['5,00 KM'] },
+          { name: 'Kiselo mlijeko', prices: ['3,00 KM'] },
+        ],
+      },
+      {
+        title: 'Piće',
+        items: [
+          { name: 'Coca-Cola', prices: ['4,00 KM'] },
+          { name: 'Fanta naranđa', prices: ['4,00 KM'] },
+          { name: 'Fanta limun', prices: ['4,00 KM'] },
+          { name: 'Sprite', prices: ['4,00 KM'] },
+          { name: 'Schweppes Bitter Lemon', prices: ['4,00 KM'] },
+          { name: 'Schweppes Tonic Water', prices: ['4,00 KM'] },
+          { name: 'Cockta', prices: ['4,00 KM'] },
+          { name: 'Mineralna voda', prices: ['3,00 KM'] },
+          { name: 'Sensation', prices: ['3,50 KM'] },
+        ],
+      },
+      {
+        title: 'Prirodni sokovi',
+        items: [
+          { name: 'Breskva', prices: ['4,00 KM'] },
+          { name: 'Jabuka', prices: ['4,00 KM'] },
+          { name: 'Jagoda', prices: ['4,00 KM'] },
+          { name: 'Borovnica', prices: ['4,00 KM'] },
+          { name: 'Đus', prices: ['4,00 KM'] },
+          { name: 'Orangina', prices: ['4,50 KM'] },
+          { name: 'Ledeni čaj', prices: ['4,00 KM'] },
+          { name: 'Prirodna voda', prices: ['3,00 KM'] },
+          { name: 'Bezalkoholno pivo', prices: ['4,00 KM'] },
+        ],
+      },
+    ],
+  },
+  en: {
+    ui: {
+      menu: 'Menu',
+      close: 'Close',
+      language: 'Choose language',
+      maps: 'Open Google Maps',
+      eyebrow: 'Mostar / ROTA 1996',
+      prices: 'Prices',
+      menuTitle: 'Menu',
+      location: 'Location',
+      locations: 'Locations',
+    },
+    nav: ['Home', 'Prices', 'Location'],
+    story: [
+      {
+        label: 'Origin',
+        title: 'In the Heart of Mostar',
+        text: 'In the heart of Mostar, ROTA began with a simple idea: honest food, real tradition, and a place where people come together. What started with a passion for Bosnian cuisine quickly became a familiar meeting point for locals and travelers from around the world.',
+      },
+      {
+        label: 'Craft',
+        title: 'Tradition on the Grill',
+        text: 'Every ćevap, every freshly baked somun, and every specialty tells a part of our story - made from traditional recipes, with care and the best ingredients. The scent of the grill, the smiles of our guests, and the warmth of the atmosphere make ROTA more than a restaurant.',
+      },
+      {
+        label: 'Today',
+        title: 'Welcome to ROTA',
+        text: 'Today, ROTA is home at two locations in Mostar - but our heart stays the same: preserve tradition, share flavor, and welcome every guest like family. Welcome to ROTA.',
+      },
+    ],
+    priceSections: [
+      {
+        title: 'Meat',
+        items: [
+          { name: 'Mostar Ćevap ROTA', prices: ['15 pcs. 20,50 KM', '10 pcs. 14,00 KM', '7 pcs. 10,00 KM', '5 pcs. 7,50 KM'] },
+          { name: 'Pljeskavica', prices: ['Large 14,00 KM', 'Small 7,50 KM', 'Spicy 14,00 KM'] },
+          { name: 'Gourmet Pljeskavica', prices: ['Large 16,00 KM', 'Small 11,00 KM'] },
+          { name: 'Homemade Sudžukice', prices: ['Large 15,00 KM', 'Small 8,50 KM'] },
+          { name: 'Shish Ćevap', prices: ['Large 15,00 KM', 'Small 8,50 KM'] },
+          { name: 'Stuffed Shish Ćevap', prices: ['Large 18,00 KM'] },
+        ],
+      },
+      {
+        title: 'Veal',
+        items: [
+          { name: 'Veal Skewers', prices: ['Large 17,00 KM', 'Small 10,00 KM'] },
+          { name: 'Veal Steak', prices: ['Large 17,00 KM'] },
+          { name: 'Veal Strips', prices: ['Large 17,00 KM', 'Small 10,00 KM'] },
+          { name: 'Veal Kidneys', prices: ['Large 15,00 KM', 'Small 9,00 KM'] },
+          { name: 'Veal Sweetbread', prices: ['Large 18,00 KM'] },
+          { name: 'Veal Liver', prices: ['Large 16,00 KM', 'Small 9,00 KM'] },
+        ],
+      },
+      {
+        title: 'Chicken',
+        items: [
+          { name: 'Chicken Fillets', prices: ['Large 14,00 KM', 'Small 8,50 KM'] },
+          { name: 'Chicken Skewers', prices: ['Large 14,00 KM', 'Small 8,50 KM'] },
+          { name: 'Chicken Leg', prices: ['Large 12,00 KM'] },
+          { name: 'Chicken Salad', prices: ['Large 12,50 KM'] },
+        ],
+      },
+      {
+        title: 'Combinations',
+        items: [
+          { name: 'Five Ćevapi + Small Pljeskavica', prices: ['15,00 KM'] },
+          { name: 'Five Ćevapi + Small Sudžukice', prices: ['15,50 KM'] },
+          { name: 'Five Ćevapi + Small Veal Strips', prices: ['16,50 KM'] },
+          { name: 'Five Ćevapi + Small Fillets', prices: ['16,00 KM'] },
+        ],
+      },
+      {
+        title: 'Side Dishes',
+        items: [
+          { name: 'Kajmak', prices: ['4,00 KM'] },
+          { name: 'Kajmak Small Portion', prices: ['2,00 KM'] },
+          { name: 'Somun', prices: ['1,00 KM'] },
+          { name: 'Seasonal Salad', prices: ['5,00 KM'] },
+          { name: 'Sour Milk', prices: ['3,00 KM'] },
+        ],
+      },
+      {
+        title: 'Drinks',
+        items: [
+          { name: 'Coca-Cola', prices: ['4,00 KM'] },
+          { name: 'Fanta Orange', prices: ['4,00 KM'] },
+          { name: 'Fanta Lemon', prices: ['4,00 KM'] },
+          { name: 'Sprite', prices: ['4,00 KM'] },
+          { name: 'Schweppes Bitter Lemon', prices: ['4,00 KM'] },
+          { name: 'Schweppes Tonic Water', prices: ['4,00 KM'] },
+          { name: 'Cockta', prices: ['4,00 KM'] },
+          { name: 'Mineral Water', prices: ['3,00 KM'] },
+          { name: 'Sensation', prices: ['3,50 KM'] },
+        ],
+      },
+      {
+        title: 'Natural Drinks',
+        items: [
+          { name: 'Peach', prices: ['4,00 KM'] },
+          { name: 'Apple', prices: ['4,00 KM'] },
+          { name: 'Strawberry', prices: ['4,00 KM'] },
+          { name: 'Blueberry', prices: ['4,00 KM'] },
+          { name: 'Orange Juice', prices: ['4,00 KM'] },
+          { name: 'Orangina', prices: ['4,50 KM'] },
+          { name: 'Iced Tea', prices: ['4,00 KM'] },
+          { name: 'Natural Water', prices: ['3,00 KM'] },
+          { name: 'Non-Alcoholic Beer', prices: ['4,00 KM'] },
+        ],
+      },
+    ],
+  },
+}
+
+const storeImageSources = ['/ROTA_1996_3.png', '/ROTA_1996_2.png', '/ROTA_1996.png']
+
+const locations = [
+  {
+    name: 'ROTA Old Town',
+    address: 'Onešćukova 7, 88000 Mostar, Bosnien und Herzegowina',
+    maps: 'https://www.google.com/maps/search/?api=1&query=Rota%20One%C5%A1%C4%87ukova%207%20Mostar',
+  },
+  {
+    name: 'ROTA Musala',
+    address: 'Mladena Balorde, 88000 Mostar, Bosnien und Herzegowina',
+    maps: 'https://www.google.com/maps/search/?api=1&query=Rota%20Mladena%20Balorde%20Mostar',
+  },
+]
+
+const navTargets = ['#scene-1', '#prices', '#story']
+
+function App() {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [languageOpen, setLanguageOpen] = useState(false)
+  const [activeScene, setActiveScene] = useState(0)
+  const [selectedLanguage, setSelectedLanguage] = useState('de')
+  const [pointer, setPointer] = useState({ x: 50, y: 50 })
+  const t = content[selectedLanguage]
+  const activeLanguage = languages.find((language) => language.code === selectedLanguage)
+
+  useEffect(() => {
+    const handlePointer = (event) => {
+      setPointer({
+        x: Math.round((event.clientX / window.innerWidth) * 100),
+        y: Math.round((event.clientY / window.innerHeight) * 100),
+      })
+    }
+
+    window.addEventListener('pointermove', handlePointer)
+    return () => window.removeEventListener('pointermove', handlePointer)
+  }, [])
+
+  useEffect(() => {
+    const sections = [...document.querySelectorAll('[data-scene]')]
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+
+        if (visible) {
+          setActiveScene(Number(visible.target.getAttribute('data-scene')))
+        }
+      },
+      { threshold: [0.35, 0.55, 0.75] },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div className="experience" style={{ '--x': `${pointer.x}%`, '--y': `${pointer.y}%` }}>
+      <ParticleField />
+      <div className="grain" aria-hidden="true" />
+
+      <header className="chrome">
+        <button className="menu-trigger" type="button" onClick={() => setMenuOpen(true)}>{t.ui.menu}</button>
+        <div className="language-switcher">
+          <button
+            className="language-toggle"
+            type="button"
+            aria-label={t.ui.language}
+            aria-expanded={languageOpen}
+            onClick={() => setLanguageOpen((open) => !open)}
+          >
+            <span className="globe-icon" aria-hidden="true" />
+            <span>{activeLanguage.short}</span>
+          </button>
+          <div className={`language-menu${languageOpen ? ' open' : ''}`}>
+            {languages.map((language) => (
+              <button
+                className={language.code === selectedLanguage ? 'active' : ''}
+                type="button"
+                key={language.code}
+                onClick={() => {
+                  setSelectedLanguage(language.code)
+                  setLanguageOpen(false)
+                }}
+              >
+                <span>{language.short}</span>
+                <strong>{language.label}</strong>
+              </button>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <aside className="progress-rail" aria-label="Seitennavigation">
+        {t.nav.map((label, index) => (
+          <a className={activeScene === index ? 'active' : ''} href={navTargets[index]} key={label} aria-label={label}>
+            <strong>{label}</strong>
+          </a>
+        ))}
+      </aside>
+
+      <main id="top">
+        <section className="intro" id="scene-1" data-scene="0">
+          <div className="intro-video" aria-label="ROTA Grillvideo">
+            <video autoPlay muted loop playsInline preload="auto">
+              <source src="/cevape.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          <Reveal className="intro-copy">
+            <p className="eyebrow">{t.ui.eyebrow}</p>
+            <h1>
+              ROTA
+              <span>Mostar</span>
+            </h1>
+          </Reveal>
+        </section>
+
+        <section className="price-board" id="prices" data-scene="1">
+          <div className="price-heading">
+            <p className="eyebrow">{t.ui.prices}</p>
+            <h2>{t.ui.menuTitle}</h2>
+          </div>
+
+          <div className="price-grid">
+            {t.priceSections.map((section, index) => (
+              <Reveal as="article" className="price-section" delay={index * 70} key={section.title}>
+                <h3>{section.title}</h3>
+                <div className="price-list">
+                  {section.items.map((item) => (
+                    <div className="price-item" key={`${section.title}-${item.name}`}>
+                      <div className="price-name">
+                        <strong>{item.name}</strong>
+                      </div>
+                      <div className="price-values">
+                        {item.prices.map((price) => (
+                          <span key={price}>{price}</span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section className="story-locations" id="story" data-scene="2">
+          <div className="section-intro">
+            <p className="eyebrow">{t.ui.location}</p>
+            <h2>{t.ui.locations}</h2>
+          </div>
+
+          <div className="story-grid">
+            {t.story.map((image, index) => (
+              <Reveal className="story-card" delay={index * 110} key={image.title}>
+                <img src={storeImageSources[index]} alt={`${image.title} bei ROTA Mostar`} />
+                <div>
+                  <span>{image.label}</span>
+                  <h3>{image.title}</h3>
+                  <p>{image.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal className="location-board" delay={160}>
+            <p className="eyebrow">{t.ui.locations}</p>
+            <div className="location-list">
+              {locations.map((location) => (
+                <a href={location.maps} target="_blank" rel="noreferrer" className="location-link" key={location.name}>
+                  <strong>{location.name}</strong>
+                  <span>{location.address}</span>
+                  <em>{t.ui.maps}</em>
+                </a>
+              ))}
+            </div>
+          </Reveal>
+        </section>
+      </main>
+
+      <div className={`overlay-menu${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
+        <button type="button" className="close-menu" onClick={() => setMenuOpen(false)}>{t.ui.close}</button>
+        <nav aria-label="Overlay Navigation">
+          {t.nav.map((label, index) => (
+            <a href={navTargets[index]} onClick={() => setMenuOpen(false)} key={label}>{label}</a>
+          ))}
+        </nav>
+        <div className="overlay-mark">1996</div>
+      </div>
+    </div>
+  )
+}
+
+function ParticleField() {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    const pointer = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.5 }
+    const particles = Array.from({ length: 96 }, (_, index) => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: Math.cos(index) * 0.18,
+      vy: Math.sin(index) * 0.18,
+      size: 1 + Math.random() * 2.7,
+    }))
+    let frame = 0
+    let animationId
+
+    const resize = () => {
+      const ratio = window.devicePixelRatio || 1
+      canvas.width = window.innerWidth * ratio
+      canvas.height = window.innerHeight * ratio
+      canvas.style.width = `${window.innerWidth}px`
+      canvas.style.height = `${window.innerHeight}px`
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
+    }
+
+    const move = (event) => {
+      pointer.x = event.clientX
+      pointer.y = event.clientY
+    }
+
+    const draw = () => {
+      frame += 0.008
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+      ctx.fillStyle = 'rgba(7, 7, 7, 0.28)'
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
+
+      particles.forEach((particle, index) => {
+        const dx = pointer.x - particle.x
+        const dy = pointer.y - particle.y
+        const distance = Math.max(Math.sqrt(dx * dx + dy * dy), 1)
+        const pull = Math.min(0.018, 18 / (distance * distance))
+
+        particle.vx += dx * pull * 0.015
+        particle.vy += dy * pull * 0.015
+        particle.vx += Math.sin(frame + index) * 0.006
+        particle.vy += Math.cos(frame + index * 0.7) * 0.006
+        particle.vx *= 0.985
+        particle.vy *= 0.985
+        particle.x += particle.vx
+        particle.y += particle.vy
+
+        if (particle.x < -20) particle.x = window.innerWidth + 20
+        if (particle.x > window.innerWidth + 20) particle.x = -20
+        if (particle.y < -20) particle.y = window.innerHeight + 20
+        if (particle.y > window.innerHeight + 20) particle.y = -20
+
+        ctx.beginPath()
+        ctx.fillStyle = `rgba(245, 176, 92, ${0.15 + Math.sin(frame + index) * 0.07})`
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
+        ctx.fill()
+
+        particles.slice(index + 1).forEach((other) => {
+          const lx = other.x - particle.x
+          const ly = other.y - particle.y
+          const linkDistance = Math.sqrt(lx * lx + ly * ly)
+          if (linkDistance < 132) {
+            ctx.strokeStyle = `rgba(245, 176, 92, ${0.065 * (1 - linkDistance / 132)})`
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(particle.x, particle.y)
+            ctx.lineTo(other.x, other.y)
+            ctx.stroke()
+          }
+        })
+      })
+
+      animationId = requestAnimationFrame(draw)
+    }
+
+    resize()
+    draw()
+    window.addEventListener('resize', resize)
+    window.addEventListener('pointermove', move)
+
+    return () => {
+      cancelAnimationFrame(animationId)
+      window.removeEventListener('resize', resize)
+      window.removeEventListener('pointermove', move)
+    }
+  }, [])
+
+  return <canvas className="particle-field" ref={canvasRef} aria-hidden="true" />
+}
+
+function Reveal({ children, className = '', delay = 0, as: Tag = 'div' }) {
+  const ref = useRef(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const node = ref.current
+    if (!node) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.16 },
+    )
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <Tag
+      ref={ref}
+      className={`reveal${visible ? ' visible' : ''}${className ? ` ${className}` : ''}`}
+      style={{ '--delay': `${delay}ms` }}
+    >
+      {children}
+    </Tag>
+  )
+}
+
+export default App
