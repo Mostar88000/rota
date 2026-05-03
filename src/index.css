@@ -88,11 +88,7 @@ canvas {
 
 .grain {
   z-index: 30;
-  opacity: 0.2;
-  mix-blend-mode: soft-light;
-  background-image:
-    repeating-radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.26) 0 1px, transparent 1px 6px);
+  display: none;
 }
 
 .chrome {
