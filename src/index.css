@@ -74,11 +74,18 @@ canvas {
     #050505;
 }
 
+.sketch-backdrop,
 .particle-field,
 .grain {
   position: fixed;
   inset: 0;
   pointer-events: none;
+}
+
+.sketch-backdrop {
+  z-index: -2;
+  opacity: 0.68;
+  mix-blend-mode: screen;
 }
 
 .particle-field {
@@ -859,6 +866,11 @@ h3 {
   .overlay-mark {
     justify-self: start;
   }
+
+  .sketch-backdrop {
+    opacity: 0.4;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -873,4 +885,9 @@ h3 {
   .particle-field {
     display: none;
   }
+
+  .sketch-backdrop {
+    opacity: 0.48;
+  }
+
 }

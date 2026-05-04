@@ -411,6 +411,7 @@ function App() {
 
   return (
     <div className="experience" style={{ '--x': `${pointer.x}%`, '--y': `${pointer.y}%` }}>
+      <SketchBackdrop />
       <ParticleField />
       <div className="grain" aria-hidden="true" />
 
@@ -558,6 +559,134 @@ function App() {
       </div>
     </div>
   )
+}
+
+function SketchBackdrop() {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    const image = new Image()
+    let animationId
+    let points = []
+    let viewport = { width: window.innerWidth, height: window.innerHeight, ratio: window.devicePixelRatio || 1 }
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const resize = () => {
+      viewport = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        ratio: Math.min(window.devicePixelRatio || 1, 1.75),
+      }
+      canvas.width = viewport.width * viewport.ratio
+      canvas.height = viewport.height * viewport.ratio
+      canvas.style.width = `${viewport.width}px`
+      canvas.style.height = `${viewport.height}px`
+      ctx.setTransform(viewport.ratio, 0, 0, viewport.ratio, 0, 0)
+    }
+
+    const buildPoints = () => {
+      const sampleWidth = 960
+      const sampleHeight = Math.round((image.naturalHeight / image.naturalWidth) * sampleWidth)
+      const sampler = document.createElement('canvas')
+      const samplerCtx = sampler.getContext('2d', { willReadFrequently: true })
+      sampler.width = sampleWidth
+      sampler.height = sampleHeight
+      samplerCtx.drawImage(image, 0, 0, sampleWidth, sampleHeight)
+
+      const imageData = samplerCtx.getImageData(0, 0, sampleWidth, sampleHeight)
+      const data = imageData.data
+      const nextPoints = []
+
+      for (let y = 0; y < sampleHeight; y += 3) {
+        for (let x = 0; x < sampleWidth; x += 3) {
+          const index = (y * sampleWidth + x) * 4
+          const brightness = (data[index] + data[index + 1] + data[index + 2]) / 3
+          if (data[index + 3] > 20 && brightness > 118) {
+            const nx = x / sampleWidth
+            const ny = y / sampleHeight
+            const jitter = Math.sin(x * 0.037 + y * 0.071) * 0.045
+            nextPoints.push({
+              x: nx,
+              y: ny,
+              order: nx * 0.78 + ny * 0.18 + jitter,
+              alpha: Math.min(1, (brightness - 118) / 120),
+            })
+          }
+        }
+      }
+
+      points = nextPoints
+    }
+
+    const draw = (time = 0) => {
+      const width = viewport.width
+      const height = viewport.height
+      ctx.clearRect(0, 0, width, height)
+
+      if (points.length) {
+        const imageAspect = image.naturalWidth / image.naturalHeight
+        const drawWidth = Math.min(width * 1.12, 1520)
+        const drawHeight = drawWidth / imageAspect
+        const originX = (width - drawWidth) / 2
+        const originY = Math.max(54, height * 0.08)
+        const loop = reduceMotion ? 0.78 : (time % 8800) / 8800
+        const reveal = reduceMotion ? 1 : Math.min(loop / 0.72, 1)
+        const fadeOut = reduceMotion || loop < 0.78 ? 1 : Math.max(0, 1 - (loop - 0.78) / 0.22)
+        const head = reveal * 1.16 - 0.08
+        const tail = Math.max(0, head - 0.34)
+
+        ctx.save()
+        ctx.globalCompositeOperation = 'lighter'
+
+        points.forEach((point, index) => {
+          if (point.order > head) return
+
+          const leadingEdge = point.order > tail ? 0.48 + ((head - point.order) / Math.max(head - tail, 0.01)) * 0.52 : 1
+          const flicker = 0.82 + Math.sin(time * 0.006 + index * 0.41) * 0.18
+          const alpha = point.alpha * leadingEdge * fadeOut * flicker
+          if (alpha <= 0.03) return
+
+          const x = originX + point.x * drawWidth
+          const y = originY + point.y * drawHeight
+          const size = point.alpha > 0.62 ? 1.25 : 0.9
+
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(alpha * 0.64, 0.62)})`
+          ctx.fillRect(x, y, size, size)
+
+          if (point.order > tail && index % 7 === 0) {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${Math.min(alpha * 0.18, 0.18)})`
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(x - 8, y)
+            ctx.lineTo(x + 8, y)
+            ctx.stroke()
+          }
+        })
+
+        ctx.restore()
+      }
+
+      animationId = requestAnimationFrame(draw)
+    }
+
+    image.onload = () => {
+      resize()
+      buildPoints()
+      draw()
+    }
+    image.src = '/Mostar.png'
+
+    window.addEventListener('resize', resize)
+
+    return () => {
+      cancelAnimationFrame(animationId)
+      window.removeEventListener('resize', resize)
+    }
+  }, [])
+
+  return <canvas className="sketch-backdrop" ref={canvasRef} aria-hidden="true" />
 }
 
 function ParticleField() {
