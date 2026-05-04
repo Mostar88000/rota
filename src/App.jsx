@@ -18,8 +18,10 @@ const content = {
       menuTitle: 'Speisekarte',
       location: 'Standort',
       locations: 'Standorte',
+      hours: 'Öffnungszeiten',
+      phone: 'Telefon',
     },
-    nav: ['Home', 'Preise', 'Standort'],
+    nav: ['Home', 'Standort', 'Preise'],
     story: [
       {
         label: 'Ursprung',
@@ -129,8 +131,10 @@ const content = {
       menuTitle: 'Jelovnik',
       location: 'Lokacija',
       locations: 'Lokacije',
+      hours: 'Radno vrijeme',
+      phone: 'Telefon',
     },
-    nav: ['Početna', 'Cijene', 'Lokacija'],
+    nav: ['Početna', 'Lokacija', 'Cijene'],
     story: [
       {
         label: 'Početak',
@@ -240,8 +244,10 @@ const content = {
       menuTitle: 'Menu',
       location: 'Location',
       locations: 'Locations',
+      hours: 'Opening Hours',
+      phone: 'Phone',
     },
-    nav: ['Home', 'Prices', 'Location'],
+    nav: ['Home', 'Location', 'Prices'],
     story: [
       {
         label: 'Origin',
@@ -347,17 +353,21 @@ const storeImageSources = ['/ROTA_1996_3.png', '/ROTA_1996_2.png', '/ROTA_1996.p
 const locations = [
   {
     name: 'ROTA Old Town',
+    hours: ['Mo-So 10:00-22:00'],
+    phone: '+387 36 550-714',
     address: 'Onešćukova 7, 88000 Mostar, Bosnien und Herzegowina',
     maps: 'https://www.google.com/maps/search/?api=1&query=Rota%20One%C5%A1%C4%87ukova%207%20Mostar',
   },
   {
-    name: 'ROTA Musala',
+    name: 'ROTA Carina',
+    hours: ['Mo-Sa 08:00-23:00', 'So 13:00-23:00'],
+    phone: '+387 36 550-714',
     address: 'Mladena Balorde, 88000 Mostar, Bosnien und Herzegowina',
     maps: 'https://www.google.com/maps/search/?api=1&query=Rota%20Mladena%20Balorde%20Mostar',
   },
 ]
 
-const navTargets = ['#scene-1', '#prices', '#story']
+const navTargets = ['#scene-1', '#story', '#prices']
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -461,7 +471,28 @@ function App() {
           </Reveal>
         </section>
 
-        <section className="price-board" id="prices" data-scene="1">
+        <section className="story-locations" id="story" data-scene="1">
+          <div className="section-intro">
+            <p className="eyebrow">{t.ui.location}</p>
+            <h2>{t.ui.locations}</h2>
+          </div>
+
+          <div className="story-grid">
+            {t.story.map((image, index) => (
+              <Reveal className="story-card" delay={index * 110} key={image.title}>
+                <img src={storeImageSources[index]} alt={`${image.title} bei ROTA Mostar`} />
+                <div>
+                  <span>{image.label}</span>
+                  <h3>{image.title}</h3>
+                  <p>{image.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+        </section>
+
+        <section className="price-board" id="prices" data-scene="2">
           <div className="price-heading">
             <p className="eyebrow">{t.ui.prices}</p>
             <h2>{t.ui.menuTitle}</h2>
@@ -490,38 +521,30 @@ function App() {
           </div>
         </section>
 
-        <section className="story-locations" id="story" data-scene="2">
-          <div className="section-intro">
-            <p className="eyebrow">{t.ui.location}</p>
-            <h2>{t.ui.locations}</h2>
-          </div>
-
-          <div className="story-grid">
-            {t.story.map((image, index) => (
-              <Reveal className="story-card" delay={index * 110} key={image.title}>
-                <img src={storeImageSources[index]} alt={`${image.title} bei ROTA Mostar`} />
-                <div>
-                  <span>{image.label}</span>
-                  <h3>{image.title}</h3>
-                  <p>{image.text}</p>
+        <Reveal className="location-board" delay={160}>
+          <p className="eyebrow">{t.ui.locations}</p>
+          <div className="location-list">
+            {locations.map((location) => (
+              <a href={location.maps} target="_blank" rel="noreferrer" className="location-link" key={location.name}>
+                <strong>{location.name}</strong>
+                <span>{location.address}</span>
+                <div className="location-meta">
+                  <div className="location-hours">
+                    <small>{t.ui.hours}</small>
+                    {location.hours.map((hours) => (
+                      <span key={`${location.name}-${hours}`}>{hours}</span>
+                    ))}
+                  </div>
+                  <div className="location-phone">
+                    <small>{t.ui.phone}</small>
+                    <span>{location.phone}</span>
+                  </div>
                 </div>
-              </Reveal>
+                <em>{t.ui.maps}</em>
+              </a>
             ))}
           </div>
-
-          <Reveal className="location-board" delay={160}>
-            <p className="eyebrow">{t.ui.locations}</p>
-            <div className="location-list">
-              {locations.map((location) => (
-                <a href={location.maps} target="_blank" rel="noreferrer" className="location-link" key={location.name}>
-                  <strong>{location.name}</strong>
-                  <span>{location.address}</span>
-                  <em>{t.ui.maps}</em>
-                </a>
-              ))}
-            </div>
-          </Reveal>
-        </section>
+        </Reveal>
       </main>
 
       <div className={`overlay-menu${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
