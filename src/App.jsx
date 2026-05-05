@@ -549,7 +549,7 @@ function App() {
       </main>
 
       <div className={`overlay-menu${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
-        <SketchBackdrop className="menu-sketch" direction="center" active={menuOpen} />
+        <SketchBackdrop className="menu-sketch" direction="center" active={menuOpen} placement="menu" />
         <button type="button" className="close-menu" onClick={() => setMenuOpen(false)}>{t.ui.close}</button>
         <nav aria-label="Overlay Navigation">
           {t.nav.map((label, index) => (
@@ -562,7 +562,7 @@ function App() {
   )
 }
 
-function SketchBackdrop({ className = '', direction = 'ltr', active = true }) {
+function SketchBackdrop({ className = '', direction = 'ltr', active = true, placement = 'page' }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -630,10 +630,11 @@ function SketchBackdrop({ className = '', direction = 'ltr', active = true }) {
 
       if (points.length && active) {
         const imageAspect = image.naturalWidth / image.naturalHeight
-        const drawWidth = Math.min(width * 1.12, 1520)
+        const isMobileMenu = placement === 'menu' && width <= 720
+        const drawWidth = isMobileMenu ? width * 1.62 : Math.min(width * 1.12, 1520)
         const drawHeight = drawWidth / imageAspect
         const originX = (width - drawWidth) / 2
-        const originY = Math.max(54, height * 0.08)
+        const originY = isMobileMenu ? height * 0.28 : Math.max(54, height * 0.08)
         const elapsed = Math.max(0, time - startTime)
         const loop = reduceMotion ? 0.78 : (elapsed % 8800) / 8800
         const reveal = reduceMotion ? 1 : Math.min(loop / 0.72, 1)
@@ -689,7 +690,7 @@ function SketchBackdrop({ className = '', direction = 'ltr', active = true }) {
       cancelAnimationFrame(animationId)
       window.removeEventListener('resize', resize)
     }
-  }, [active, direction])
+  }, [active, direction, placement])
 
   return <canvas className={`sketch-backdrop${className ? ` ${className}` : ''}`} ref={canvasRef} aria-hidden="true" />
 }
