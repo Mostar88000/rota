@@ -702,16 +702,28 @@ h3 {
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
+.overlay-menu .menu-sketch {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
 .overlay-menu.open {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
 }
 
+.overlay-menu.open .menu-sketch {
+  opacity: 0.56;
+}
+
 .close-menu {
   position: absolute;
   top: var(--safe);
   right: var(--safe);
+  z-index: 2;
   min-height: 44px;
   padding: 0 14px;
   color: #090706;
@@ -720,6 +732,8 @@ h3 {
 }
 
 .overlay-menu nav {
+  position: relative;
+  z-index: 1;
   align-self: center;
   display: grid;
   gap: 16px;
@@ -740,6 +754,8 @@ h3 {
 }
 
 .overlay-mark {
+  position: relative;
+  z-index: 1;
   align-self: end;
   justify-self: end;
   color: transparent;

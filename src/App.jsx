@@ -411,7 +411,7 @@ function App() {
 
   return (
     <div className="experience" style={{ '--x': `${pointer.x}%`, '--y': `${pointer.y}%` }}>
-      <SketchBackdrop />
+      <SketchBackdrop direction="center" />
       <ParticleField />
       <div className="grain" aria-hidden="true" />
 
@@ -549,6 +549,7 @@ function App() {
       </main>
 
       <div className={`overlay-menu${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
+        <SketchBackdrop className="menu-sketch" direction="center" active={menuOpen} />
         <button type="button" className="close-menu" onClick={() => setMenuOpen(false)}>{t.ui.close}</button>
         <nav aria-label="Overlay Navigation">
           {t.nav.map((label, index) => (
@@ -561,7 +562,7 @@ function App() {
   )
 }
 
-function SketchBackdrop() {
+function SketchBackdrop({ className = '', direction = 'ltr', active = true }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -570,6 +571,7 @@ function SketchBackdrop() {
     const image = new Image()
     let animationId
     let points = []
+    let startTime = 0
     let viewport = { width: window.innerWidth, height: window.innerHeight, ratio: window.devicePixelRatio || 1 }
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -607,10 +609,11 @@ function SketchBackdrop() {
             const nx = x / sampleWidth
             const ny = y / sampleHeight
             const jitter = Math.sin(x * 0.037 + y * 0.071) * 0.045
+            const horizontalOrder = direction === 'center' ? Math.abs(nx - 0.5) * 2 : direction === 'rtl' ? 1 - nx : nx
             nextPoints.push({
               x: nx,
               y: ny,
-              order: nx * 0.78 + ny * 0.18 + jitter,
+              order: (direction === 'center' ? 1 - horizontalOrder : horizontalOrder) * 0.78 + ny * 0.18 + jitter,
               alpha: Math.min(1, (brightness - 118) / 120),
             })
           }
@@ -625,13 +628,14 @@ function SketchBackdrop() {
       const height = viewport.height
       ctx.clearRect(0, 0, width, height)
 
-      if (points.length) {
+      if (points.length && active) {
         const imageAspect = image.naturalWidth / image.naturalHeight
         const drawWidth = Math.min(width * 1.12, 1520)
         const drawHeight = drawWidth / imageAspect
         const originX = (width - drawWidth) / 2
         const originY = Math.max(54, height * 0.08)
-        const loop = reduceMotion ? 0.78 : (time % 8800) / 8800
+        const elapsed = Math.max(0, time - startTime)
+        const loop = reduceMotion ? 0.78 : (elapsed % 8800) / 8800
         const reveal = reduceMotion ? 1 : Math.min(loop / 0.72, 1)
         const fadeOut = reduceMotion || loop < 0.78 ? 1 : Math.max(0, 1 - (loop - 0.78) / 0.22)
         const head = reveal * 1.16 - 0.08
@@ -672,6 +676,7 @@ function SketchBackdrop() {
     }
 
     image.onload = () => {
+      startTime = performance.now()
       resize()
       buildPoints()
       draw()
@@ -684,9 +689,9 @@ function SketchBackdrop() {
       cancelAnimationFrame(animationId)
       window.removeEventListener('resize', resize)
     }
-  }, [])
+  }, [active, direction])
 
-  return <canvas className="sketch-backdrop" ref={canvasRef} aria-hidden="true" />
+  return <canvas className={`sketch-backdrop${className ? ` ${className}` : ''}`} ref={canvasRef} aria-hidden="true" />
 }
 
 function ParticleField() {
