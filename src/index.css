@@ -674,15 +674,24 @@ h3 {
   letter-spacing: 0.04em;
 }
 
-.location-link em {
+.location-map {
   align-self: end;
   color: var(--gold);
   font-family: 'Space Mono', monospace;
   font-size: 0.72rem;
-  font-style: normal;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.location-phone {
+  color: inherit;
+  text-decoration: none;
+}
+
+.location-phone:hover span,
+.location-map:hover {
+  color: var(--gold);
 }
 
 .overlay-menu {

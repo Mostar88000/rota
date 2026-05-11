@@ -38,6 +38,21 @@ const content = {
         title: 'Willkommen bei ROTA',
         text: 'Heute ist ROTA an zwei Standorten in Mostar zuhause - aber unser Herz bleibt dasselbe: Tradition bewahren, Geschmack teilen und jeden Gast wie Familie empfangen. Willkommen bei ROTA.',
       },
+      {
+        label: 'Genuss',
+        title: 'Frisch auf den Tisch',
+        text: 'Wenn der Grill glüht und das Somun warm serviert wird, entsteht genau dieser ROTA-Moment: unkompliziert, herzlich und voller Geschmack. Jeder Teller kommt mit dem Duft Mostars und der Einladung, sich Zeit zu nehmen.',
+      },
+      {
+        label: 'Atmosphäre',
+        title: 'Ein Platz zum Ankommen',
+        text: 'Ob kurzer Mittagstisch, Abendessen mit Freunden oder eine Pause nach dem Spaziergang durch die Altstadt - bei ROTA findet jeder seinen Platz. Warmes Licht, ehrliche Küche und ein Service, der Gäste willkommen heißt.',
+      },
+      {
+        label: 'Einladung',
+        title: 'Gemeinsam schmeckt es besser',
+        text: 'Unsere Küche ist gemacht zum Teilen: frisch gegrilltes Fleisch, duftendes Brot, Kajmak und Salate auf dem Tisch. Kommen Sie vorbei, bestellen Sie Ihre Favoriten und erleben Sie Mostar so, wie es schmecken soll.',
+      },
     ],
     priceSections: [
       {
@@ -348,13 +363,56 @@ const content = {
   },
 }
 
-const storeImageSources = ['/ROTA_1996_3.png', '/ROTA_1996_2.png', '/ROTA_1996.png']
+const extraStories = {
+  bs: [
+    {
+      label: 'Uzitak',
+      title: 'Svjeze na stolu',
+      text: 'Kada rostilj zamirise, a somun dodje topao na sto, nastaje pravi ROTA trenutak: jednostavan, srdacan i pun ukusa. Svaki tanjir nosi miris Mostara i poziv da se ostane jos malo.',
+    },
+    {
+      label: 'Atmosfera',
+      title: 'Mjesto za predah',
+      text: 'Bilo da dolazite na brzi rucak, veceru s prijateljima ili pauzu poslije setnje starim gradom - u ROTI svako lako pronadje svoje mjesto. Topla atmosfera, domaci ukus i docek koji se pamti.',
+    },
+    {
+      label: 'Poziv',
+      title: 'Zajedno je ukusnije',
+      text: 'Nasa kuhinja je stvorena za dijeljenje: meso s rostilja, mirisni somun, kajmak i salate na stolu. Svratite, narucite ono sto volite i dozivite Mostar kroz okus koji ostaje.',
+    },
+  ],
+  en: [
+    {
+      label: 'Flavor',
+      title: 'Fresh from the Grill',
+      text: 'When the grill is glowing and warm somun reaches the table, that is the ROTA moment: honest, generous, and full of flavor. Every plate carries the scent of Mostar and an invitation to slow down.',
+    },
+    {
+      label: 'Atmosphere',
+      title: 'A Place to Settle In',
+      text: 'Whether it is a quick lunch, dinner with friends, or a pause after walking through the Old Town, ROTA gives every guest a comfortable place to land. Warm light, real food, and a welcome that feels personal.',
+    },
+    {
+      label: 'Invitation',
+      title: 'Better Shared',
+      text: 'Our kitchen is made for the table: grilled specialties, fragrant bread, kajmak, and fresh salads meant to be enjoyed together. Come by, order your favorites, and taste Mostar the ROTA way.',
+    },
+  ],
+}
+
+const storeImageSources = [
+  '/ROTA_1996_3.png',
+  '/ROTA_1996_2.png',
+  '/ROTA_1996_1.png',
+  '/ROTA_1996_4.jpeg',
+  '/ROTA_1996_5.jpeg',
+  '/ROTA_1996_6.jpeg',
+]
 
 const locations = [
   {
     name: 'ROTA Old Town',
     hours: ['Mo-So 10:00-22:00'],
-    phone: '+387 36 550-714',
     address: 'Onešćukova 7, 88000 Mostar, Bosnien und Herzegowina',
     maps: 'https://www.google.com/maps/search/?api=1&query=Rota%20One%C5%A1%C4%87ukova%207%20Mostar',
   },
@@ -376,6 +434,7 @@ function App() {
   const [selectedLanguage, setSelectedLanguage] = useState('de')
   const [pointer, setPointer] = useState({ x: 50, y: 50 })
   const t = content[selectedLanguage]
+  const storyItems = t.story.length === storeImageSources.length ? t.story : [...t.story, ...(extraStories[selectedLanguage] || [])]
   const activeLanguage = languages.find((language) => language.code === selectedLanguage)
 
   useEffect(() => {
@@ -479,7 +538,7 @@ function App() {
           </div>
 
           <div className="story-grid">
-            {t.story.map((image, index) => (
+            {storyItems.map((image, index) => (
               <Reveal className="story-card" delay={index * 110} key={image.title}>
                 <img src={storeImageSources[index]} alt={`${image.title} bei ROTA Mostar`} />
                 <div>
@@ -526,7 +585,7 @@ function App() {
           <p className="eyebrow">{t.ui.locations}</p>
           <div className="location-list">
             {locations.map((location) => (
-              <a href={location.maps} target="_blank" rel="noreferrer" className="location-link" key={location.name}>
+              <article className="location-link" key={location.name}>
                 <strong>{location.name}</strong>
                 <span>{location.address}</span>
                 <div className="location-meta">
@@ -536,13 +595,15 @@ function App() {
                       <span key={`${location.name}-${hours}`}>{hours}</span>
                     ))}
                   </div>
-                  <div className="location-phone">
-                    <small>{t.ui.phone}</small>
-                    <span>{location.phone}</span>
-                  </div>
+                  {location.phone && (
+                    <a className="location-phone" href={`tel:${location.phone.replace(/[\s-]/g, '')}`}>
+                      <small>{t.ui.phone}</small>
+                      <span>{location.phone}</span>
+                    </a>
+                  )}
                 </div>
-                <em>{t.ui.maps}</em>
-              </a>
+                <a className="location-map" href={location.maps} target="_blank" rel="noreferrer">{t.ui.maps}</a>
+              </article>
             ))}
           </div>
         </Reveal>
