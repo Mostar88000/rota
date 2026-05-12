@@ -366,19 +366,19 @@ const content = {
 const extraStories = {
   bs: [
     {
-      label: 'Uzitak',
-      title: 'Svjeze na stolu',
-      text: 'Kada rostilj zamirise, a somun dodje topao na sto, nastaje pravi ROTA trenutak: jednostavan, srdacan i pun ukusa. Svaki tanjir nosi miris Mostara i poziv da se ostane jos malo.',
+      label: 'Užitak',
+      title: 'Svježe na stolu',
+      text: 'Kada roštilj zamiriše, a somun dođe topao na sto, nastaje pravi ROTA trenutak: jednostavan, srdačan i pun ukusa. Svaki tanjir nosi miris Mostara i poziv da se ostane još malo.',
     },
     {
       label: 'Atmosfera',
       title: 'Mjesto za predah',
-      text: 'Bilo da dolazite na brzi rucak, veceru s prijateljima ili pauzu poslije setnje starim gradom - u ROTI svako lako pronadje svoje mjesto. Topla atmosfera, domaci ukus i docek koji se pamti.',
+      text: 'Bilo da dolazite na brzi ručak, večeru s prijateljima ili pauzu poslije šetnje starim gradom - u ROTI svako lako pronađe svoje mjesto. Topla atmosfera, domaći ukus i doček koji se pamti.',
     },
     {
       label: 'Poziv',
       title: 'Zajedno je ukusnije',
-      text: 'Nasa kuhinja je stvorena za dijeljenje: meso s rostilja, mirisni somun, kajmak i salate na stolu. Svratite, narucite ono sto volite i dozivite Mostar kroz okus koji ostaje.',
+      text: 'Naša kuhinja je stvorena za dijeljenje: meso s roštilja, mirisni somun, kajmak i salate na stolu. Svratite, naručite ono što volite i doživite Mostar kroz okus koji ostaje.',
     },
   ],
   en: [
@@ -425,17 +425,234 @@ const locations = [
   },
 ]
 
-const navTargets = ['#scene-1', '#story', '#prices']
+const navTargets = ['#home', '#story', '#prices']
+
+const priceLocations = [
+  { id: 'carina', name: 'ROTA Carina' },
+  { id: 'oldTown', name: 'ROTA Old Town' },
+]
+
+const oldTownPriceSections = {
+  bs: [
+  {
+    title: 'Meso',
+    items: [
+      { name: 'Mostarski ćevap ROTA', prices: ['15 kom. 25,00 KM', '10 kom. 17,00 KM', '7 kom. 12,00 KM', '5 kom. 9,00 KM'] },
+      { name: 'Pljeskavica', prices: ['Velika 17,00 KM', 'Mala 9,00 KM', 'Ljuta 17,00 KM'] },
+      { name: 'Domaće sudžukice', prices: ['Velika 18,00 KM', 'Mala 10,50 KM'] },
+      { name: 'Šiš ćevap', prices: ['Velika 18,00 KM', 'Mala 10,50 KM'] },
+    ],
+  },
+  {
+    title: 'Teleće meso',
+    items: [
+      { name: 'Teleći ražnjići', prices: ['Velika 21,00 KM', 'Mala 12,00 KM'] },
+      { name: 'Teleća šnicla', prices: ['Velika 21,00 KM'] },
+      { name: 'Teleće krpice', prices: ['Velika 21,00 KM', 'Mala 12,00 KM'] },
+      { name: 'Teleća brizla', prices: ['Velika 22,00 KM'] },
+      { name: 'Teleća džigarica', prices: ['Velika 19,50 KM', 'Mala 11,00 KM'] },
+    ],
+  },
+  {
+    title: 'Piletina',
+    items: [
+      { name: 'Pileći fileti', prices: ['Velika 17,00 KM', 'Mala 10,50 KM'] },
+      { name: 'Pileći ražnjići', prices: ['Velika 17,00 KM', 'Mala 10,50 KM'] },
+      { name: 'Pileći batak', prices: ['Velika 15,00 KM'] },
+    ],
+  },
+  {
+    title: 'Kombinacije',
+    items: [
+      { name: 'Pet ćevapa + mala pljeskavica', prices: ['18,00 KM'] },
+      { name: 'Pet ćevapa + male sudžukice', prices: ['18,50 KM'] },
+      { name: 'Pet ćevapa + male krpice', prices: ['20,00 KM'] },
+      { name: 'Pet ćevapa + mali fileti', prices: ['18,50 KM'] },
+    ],
+  },
+  {
+    title: 'Prilozi',
+    items: [
+      { name: 'Kajmak', prices: ['6,00 KM'] },
+      { name: 'Kajmak mala porcija', prices: ['3,00 KM'] },
+      { name: 'Somun', prices: ['1,50 KM'] },
+      { name: 'Sezonska salata', prices: ['6,00 KM'] },
+      { name: 'Kiselo mlijeko (0,20l)', prices: ['3,00 KM'] },
+    ],
+  },
+  {
+    title: 'Piće',
+    items: [
+      { name: 'Coca Cola (0,25l)', prices: ['5,00 KM'] },
+      { name: 'Fanta (0,25l)', prices: ['5,00 KM'] },
+      { name: 'Schweppes (0,25l)', prices: ['5,00 KM'] },
+      { name: 'Cockta (0,25l)', prices: ['5,00 KM'] },
+      { name: 'Mineralna voda (0,25l)', prices: ['5,00 KM'] },
+    ],
+  },
+  {
+    title: 'Prirodni sokovi',
+    items: [
+      { name: 'Jabuka (0,20l)', prices: ['5,00 KM'] },
+      { name: 'Đus (0,20l)', prices: ['5,00 KM'] },
+      { name: 'Crna ribizla (0,25l)', prices: ['5,00 KM'] },
+      { name: 'Prirodna voda (0,5l)', prices: ['5,00 KM'] },
+      { name: 'Bezalkoholno pivo (0,33l)', prices: ['5,00 KM'] },
+      { name: 'Breskva (0,20l)', prices: ['5,00 KM'] },
+    ],
+  },
+  ],
+  de: [
+    {
+      title: 'Fleisch',
+      items: [
+        { name: 'Mostarski Cevap ROTA', prices: ['15 Stk. 25,00 KM', '10 Stk. 17,00 KM', '7 Stk. 12,00 KM', '5 Stk. 9,00 KM'] },
+        { name: 'Pljeskavica', prices: ['Groß 17,00 KM', 'Klein 9,00 KM', 'Scharf 17,00 KM'] },
+        { name: 'Hausgemachte Sudžukice', prices: ['Groß 18,00 KM', 'Klein 10,50 KM'] },
+        { name: 'Šiš Ćevap', prices: ['Groß 18,00 KM', 'Klein 10,50 KM'] },
+      ],
+    },
+    {
+      title: 'Kalbfleisch',
+      items: [
+        { name: 'Kalbsspieß', prices: ['Groß 21,00 KM', 'Klein 12,00 KM'] },
+        { name: 'Kalbsschnitzel', prices: ['Groß 21,00 KM'] },
+        { name: 'Kalbsgeschnetzeltes', prices: ['Groß 21,00 KM', 'Klein 12,00 KM'] },
+        { name: 'Kalbsbries', prices: ['Groß 22,00 KM'] },
+        { name: 'Kalbsleber', prices: ['Groß 19,50 KM', 'Klein 11,00 KM'] },
+      ],
+    },
+    {
+      title: 'Hähnchen',
+      items: [
+        { name: 'Hähnchenfilets', prices: ['Groß 17,00 KM', 'Klein 10,50 KM'] },
+        { name: 'Hähnchenspieße', prices: ['Groß 17,00 KM', 'Klein 10,50 KM'] },
+        { name: 'Hähnchenkeule', prices: ['Groß 15,00 KM'] },
+      ],
+    },
+    {
+      title: 'Kombinationen',
+      items: [
+        { name: 'Fünf Cevapi + kleine Pljeskavica', prices: ['18,00 KM'] },
+        { name: 'Fünf Ćevapi + kleine Sudžukice', prices: ['18,50 KM'] },
+        { name: 'Fünf Cevapi + kleine Kalbsstreifen', prices: ['20,00 KM'] },
+        { name: 'Fünf Cevapi + kleine Filets', prices: ['18,50 KM'] },
+      ],
+    },
+    {
+      title: 'Beilagen',
+      items: [
+        { name: 'Kajmak', prices: ['6,00 KM'] },
+        { name: 'Kajmak kleine Portion', prices: ['3,00 KM'] },
+        { name: 'Somun', prices: ['1,50 KM'] },
+        { name: 'Saisonsalat', prices: ['6,00 KM'] },
+        { name: 'Sauermilch (0,20l)', prices: ['3,00 KM'] },
+      ],
+    },
+    {
+      title: 'Getränke',
+      items: [
+        { name: 'Coca Cola (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Fanta (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Schweppes (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Cockta (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Mineralwasser (0,25l)', prices: ['5,00 KM'] },
+      ],
+    },
+    {
+      title: 'Natürliche Säfte',
+      items: [
+        { name: 'Pfirsich (0,20l)', prices: ['5,00 KM'] },
+        { name: 'Apfel (0,20l)', prices: ['5,00 KM'] },
+        { name: 'Orangensaft (0,20l)', prices: ['5,00 KM'] },
+        { name: 'Schwarze Johannisbeere (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Stilles Wasser (0,5l)', prices: ['5,00 KM'] },
+        { name: 'Alkoholfreies Bier (0,33l)', prices: ['5,00 KM'] },
+      ],
+    },
+  ],
+  en: [
+    {
+      title: 'Meat',
+      items: [
+        { name: 'Mostar Cevap ROTA', prices: ['15 pcs. 25,00 KM', '10 pcs. 17,00 KM', '7 pcs. 12,00 KM', '5 pcs. 9,00 KM'] },
+        { name: 'Grilled meat patty', prices: ['Large 17,00 KM', 'Small 9,00 KM', 'Spicy 17,00 KM'] },
+        { name: 'Home-made sausage', prices: ['Large 18,00 KM', 'Small 10,50 KM'] },
+        { name: 'Shish kebab', prices: ['Large 18,00 KM', 'Small 10,50 KM'] },
+      ],
+    },
+    {
+      title: 'Veal',
+      items: [
+        { name: 'Veal sish kebab', prices: ['Large 21,00 KM', 'Small 12,00 KM'] },
+        { name: 'Veal steak', prices: ['Large 21,00 KM'] },
+        { name: 'Veal strips', prices: ['Large 21,00 KM', 'Small 12,00 KM'] },
+        { name: 'Veal sweetbreads', prices: ['Large 22,00 KM'] },
+        { name: 'Veal liver', prices: ['Large 19,50 KM', 'Small 11,00 KM'] },
+      ],
+    },
+    {
+      title: 'Chicken',
+      items: [
+        { name: 'Chicken fillets', prices: ['Large 17,00 KM', 'Small 10,50 KM'] },
+        { name: 'Chicken shish kebab', prices: ['Large 17,00 KM', 'Small 10,50 KM'] },
+        { name: 'Chicken leg', prices: ['Large 15,00 KM'] },
+      ],
+    },
+    {
+      title: 'Combinations',
+      items: [
+        { name: 'Five cevapi + small grilled meat patty', prices: ['18,00 KM'] },
+        { name: 'Five cevapi + small home-made sausages', prices: ['18,50 KM'] },
+        { name: 'Five cevapi + small veal strips', prices: ['20,00 KM'] },
+        { name: 'Five cevapi + small chicken fillets', prices: ['18,50 KM'] },
+      ],
+    },
+    {
+      title: 'Side Dishes',
+      items: [
+        { name: 'Kajmak cream', prices: ['6,00 KM'] },
+        { name: 'Kajmak cream small portion', prices: ['3,00 KM'] },
+        { name: 'Somun pita bread', prices: ['1,50 KM'] },
+        { name: 'Season salad', prices: ['6,00 KM'] },
+        { name: 'Yoghurt (0,20l)', prices: ['3,00 KM'] },
+      ],
+    },
+    {
+      title: 'Drinks',
+      items: [
+        { name: 'Coca Cola (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Fanta orange (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Schweppes (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Cockta (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Mineral water (0,25l)', prices: ['5,00 KM'] },
+      ],
+    },
+    {
+      title: 'Natural Drinks',
+      items: [
+        { name: 'Peach (0,20l)', prices: ['5,00 KM'] },
+        { name: 'Apple (0,20l)', prices: ['5,00 KM'] },
+        { name: 'Orange juice (0,20l)', prices: ['5,00 KM'] },
+        { name: 'Black currant juice (0,25l)', prices: ['5,00 KM'] },
+        { name: 'Natural water (0,5l)', prices: ['5,00 KM'] },
+        { name: 'Nonalcoholic beer (0,33l)', prices: ['5,00 KM'] },
+      ],
+    },
+  ],
+}
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [languageOpen, setLanguageOpen] = useState(false)
   const [activeScene, setActiveScene] = useState(0)
-  const [selectedLanguage, setSelectedLanguage] = useState('de')
+  const [selectedLanguage, setSelectedLanguage] = useState('bs')
+  const [selectedPriceLocation, setSelectedPriceLocation] = useState('carina')
   const [pointer, setPointer] = useState({ x: 50, y: 50 })
   const t = content[selectedLanguage]
   const storyItems = t.story.length === storeImageSources.length ? t.story : [...t.story, ...(extraStories[selectedLanguage] || [])]
   const activeLanguage = languages.find((language) => language.code === selectedLanguage)
+  const activePriceSections = selectedPriceLocation === 'oldTown' ? oldTownPriceSections[selectedLanguage] : t.priceSections
 
   useEffect(() => {
     const handlePointer = (event) => {
@@ -515,7 +732,7 @@ function App() {
       </aside>
 
       <main id="top">
-        <section className="intro" id="scene-1" data-scene="0">
+        <section className="intro" id="home" data-scene="0">
           <div className="intro-video" aria-label="ROTA Grillvideo">
             <video autoPlay muted loop playsInline preload="auto">
               <source src="/cevape.mp4" type="video/mp4" />
@@ -555,11 +772,26 @@ function App() {
         <section className="price-board" id="prices" data-scene="2">
           <div className="price-heading">
             <p className="eyebrow">{t.ui.prices}</p>
-            <h2>{t.ui.menuTitle}</h2>
+            <div>
+              <h2>{t.ui.menuTitle}</h2>
+              <div className="price-location-nav" aria-label="Preise nach Standort filtern">
+                {priceLocations.map((location) => (
+                  <button
+                    className={selectedPriceLocation === location.id ? 'active' : ''}
+                    type="button"
+                    key={location.id}
+                    onClick={() => setSelectedPriceLocation(location.id)}
+                    aria-pressed={selectedPriceLocation === location.id}
+                  >
+                    {location.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="price-grid">
-            {t.priceSections.map((section, index) => (
+            {activePriceSections.map((section, index) => (
               <Reveal as="article" className="price-section" delay={index * 70} key={section.title}>
                 <h3>{section.title}</h3>
                 <div className="price-list">
@@ -582,7 +814,6 @@ function App() {
         </section>
 
         <Reveal className="location-board" delay={160}>
-          <p className="eyebrow">{t.ui.locations}</p>
           <div className="location-list">
             {locations.map((location) => (
               <article className="location-link" key={location.name}>
@@ -606,6 +837,7 @@ function App() {
               </article>
             ))}
           </div>
+          <img className="location-logo" src="/ROTA_Logo.svg" alt="ROTA" />
         </Reveal>
       </main>
 

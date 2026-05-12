@@ -437,6 +437,39 @@ h3 {
   text-wrap: balance;
 }
 
+.price-location-nav {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  width: min(100%, 460px);
+  margin-top: 18px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  background: rgba(248, 242, 231, 0.04);
+}
+
+.price-location-nav button {
+  min-height: 44px;
+  padding: 0 16px;
+  color: #16110b;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.price-location-nav button:hover {
+  color: #16110b;
+  transform: translateY(-1px);
+}
+
+.price-location-nav button.active {
+  background: var(--gold);
+  color: #16110b;
+}
+
 .price-grid {
   position: relative;
   z-index: 1;
@@ -591,8 +624,9 @@ h3 {
 
 .location-board {
   display: grid;
-  grid-template-columns: minmax(220px, 0.35fr) minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.32fr);
+  gap: clamp(20px, 4vw, 72px);
+  align-items: center;
   margin-bottom: clamp(72px, 8vw, 120px);
   padding: 24px;
   border: 1px solid var(--line);
@@ -606,6 +640,13 @@ h3 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+}
+
+.location-logo {
+  width: min(100%, 320px);
+  justify-self: center;
+  opacity: 0.92;
+  filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.42));
 }
 
 .location-link {
@@ -794,9 +835,13 @@ h3 {
 @media (max-width: 1040px) {
   .section-intro,
   .story-grid,
-  .location-board,
-  .location-list {
+  .location-board {
     grid-template-columns: 1fr;
+  }
+
+  .location-logo {
+    justify-self: start;
+    width: min(58vw, 260px);
   }
 
   .intro-video {
@@ -864,6 +909,11 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .price-location-nav {
+    display: grid;
+    width: 100%;
+  }
+
   .price-item {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
@@ -882,6 +932,15 @@ h3 {
 
   .location-board {
     padding: 18px;
+  }
+
+  .location-list {
+    grid-template-columns: 1fr;
+  }
+
+  .location-logo {
+    justify-self: center;
+    width: min(72vw, 220px);
   }
 
   .overlay-menu {
