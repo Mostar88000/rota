@@ -837,7 +837,7 @@ function App() {
               </article>
             ))}
           </div>
-          <img className="location-logo" src="/ROTA_Logo.svg" alt="ROTA" />
+          <img className="location-logo" src="/ROTA_Logo.png" alt="ROTA" />
         </Reveal>
       </main>
 
